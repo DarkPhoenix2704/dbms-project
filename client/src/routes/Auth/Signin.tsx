@@ -3,7 +3,6 @@ import {
   Box,
   FormControl,
   Input,
-  FormErrorMessage,
   Text,
   Checkbox,
   Button,
@@ -105,6 +104,7 @@ const Signin = () => {
           >
             <Input
               isRequired
+              type="email"
               placeholder="Enter your Email"
               disabled={loading}
               variant="filled"
@@ -148,6 +148,7 @@ const Signin = () => {
           >
             <Input
               isRequired
+              type="password"
               placeholder="Password"
               disabled={loading}
               variant="filled"

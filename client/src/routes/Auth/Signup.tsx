@@ -115,16 +115,14 @@ const Signup = () => {
         <form>
           <FormControl
             marginBlockStart="8px"
-            width={{
-              base: "325px",
-              md: "400px",
-            }}
+            width="100%"
             isRequired
             label="Full Name"
             id="Name"
           >
             <Input
               isRequired
+              type="name"
               placeholder="Enter your Full Name"
               disabled={loading}
               variant="filled"
@@ -162,15 +160,13 @@ const Signup = () => {
 
           <FormControl
             marginBlockStart="12px"
-            width={{
-              base: "325px",
-              md: "400px",
-            }}
+            width="100%"
             isRequired
             label="Email"
             id="Email"
           >
             <Input
+              type="email"
               isRequired
               placeholder="Enter your Email"
               disabled={loading}
@@ -208,15 +204,13 @@ const Signup = () => {
           </FormControl>
           <FormControl
             marginBlockStart="12px"
-            width={{
-              base: "325px",
-              md: "400px",
-            }}
+            width="100%"
             isRequired
             label="Password"
             id="Password"
           >
             <Input
+              type="password"
               isRequired
               placeholder="Create a Password"
               disabled={loading}
