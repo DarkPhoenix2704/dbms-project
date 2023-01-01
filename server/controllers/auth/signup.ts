@@ -8,9 +8,7 @@ const signup = async (req: Request, res: Response) => {
   try {
     const user = await UserSchema.findOne({ email });
     if (user) {
-      return res
-        .status(400)
-        .json({ success: false, message: "User already exists" });
+      return res.json({ success: false, message: "User already exists" });
     }
     const hashedPassword = await hash(password, 10);
     const newUser = new UserSchema({ name, email, password: hashedPassword });

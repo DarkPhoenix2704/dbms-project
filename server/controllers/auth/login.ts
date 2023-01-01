@@ -8,15 +8,11 @@ const login = async (req: Request, res: Response) => {
   try {
     const user = await UserSchema.findOne({ email });
     if (!user) {
-      return res
-        .status(400)
-        .json({ success: false, message: "User not found" });
+      return res.json({ success: false, message: "User not found" });
     }
     const isMatch = await compare(password, user.password);
     if (!isMatch) {
-      return res
-        .status(400)
-        .json({ success: false, message: "Incorrect password" });
+      return res.json({ success: false, message: "Incorrect password" });
     }
     const token = sign(
       {
