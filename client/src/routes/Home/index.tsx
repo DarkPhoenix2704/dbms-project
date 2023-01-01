@@ -27,7 +27,7 @@ const Home = () => {
   return (
     <BaseLayout>
       <Heading textColor="white" fontFamily="Clash Display">
-        Hi <span style={{ color: "red" }}> {user ? user!.name : "Bitch"}</span>
+        Hi <span style={{ color: "red" }}> {user ? user!.name : "Hello"}</span>
       </Heading>
       <Button
         width="250px"

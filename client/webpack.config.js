@@ -31,7 +31,6 @@ const config = {
         removeComments: true,
       },
     }),
-    new Dotenv(),
   ],
   module: {
     rules: [
