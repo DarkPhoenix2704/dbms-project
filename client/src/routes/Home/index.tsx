@@ -2,7 +2,7 @@ import React, { useEffect } from "react";
 import { Heading, VStack, Button } from "@chakra-ui/react";
 import { useNavigate } from "react-router-dom";
 import { BaseLayout } from "../../layout";
-import parseJwt from "../../util";
+import { parseJwt } from "../../util";
 const Home = () => {
   const navigate = useNavigate();
   const [user, setUser] = React.useState<any>();

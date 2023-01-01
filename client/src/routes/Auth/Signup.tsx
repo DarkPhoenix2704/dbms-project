@@ -12,6 +12,7 @@ import React, { FormEvent } from "react";
 import { useNavigate } from "react-router-dom";
 import { api } from "../../api";
 import { BaseLayout } from "../../layout";
+import { delay } from "../../util";
 
 interface Errors {
   name: boolean;
@@ -37,7 +38,7 @@ const Signup = () => {
     navigate("/signin");
   };
 
-  const createAccount = (e: FormEvent) => {
+  const createAccount = async (e: FormEvent) => {
     e.preventDefault();
 
     if (name.length < 1) {
@@ -70,7 +71,7 @@ const Signup = () => {
           email,
           password,
         })
-        .then((res) => {
+        .then(async (res) => {
           if (res.data.success) {
             toast({
               title: "Account created.",
@@ -86,6 +87,7 @@ const Signup = () => {
     } catch (err) {
       console.log(err);
     } finally {
+      await delay(5000);
       setLoading(false);
       navigate("/");
     }
@@ -267,6 +269,7 @@ const Signup = () => {
             )}
           </Text>
           <Button
+            isLoading={loading}
             marginBlockStart="16px"
             width="100%"
             backgroundColor="white"

@@ -12,6 +12,7 @@ import React, { FormEvent } from "react";
 import { useNavigate } from "react-router-dom";
 import { api } from "../../api";
 import { BaseLayout } from "../../layout";
+import { delay } from "../../util";
 interface Errors {
   email: boolean;
   password: boolean;
@@ -58,7 +59,7 @@ const Signin = () => {
           email,
           password,
         })
-        .then((res) => {
+        .then(async (res) => {
           if (res.data.success) {
             localStorage.setItem("token", JSON.stringify(res.data.data));
           } else {
@@ -68,6 +69,7 @@ const Signin = () => {
     } catch (error) {
       console.log(error);
     } finally {
+      await delay(2000);
       setLoading(false);
       navigate("/");
     }
@@ -203,6 +205,7 @@ const Signin = () => {
             )}
           </Text>
           <Button
+            isLoading={loading}
             marginBlockStart="16px"
             width="100%"
             backgroundColor="white"

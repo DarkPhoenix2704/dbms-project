@@ -13,5 +13,6 @@ const parseJwt = (token: string) => {
 
   return JSON.parse(jsonPayload);
 };
+const delay = (ms: number) => new Promise((res) => setTimeout(res, ms));
 
-export default parseJwt;
+export { parseJwt, delay };
