@@ -4,12 +4,13 @@ import {
   Checkbox,
   FormControl,
   Text,
-  FormErrorMessage,
+  useToast,
   Heading,
   Input,
 } from "@chakra-ui/react";
 import React, { FormEvent } from "react";
 import { useNavigate } from "react-router-dom";
+import { api } from "../../api";
 import { BaseLayout } from "../../layout";
 
 interface Errors {
@@ -18,6 +19,7 @@ interface Errors {
   password: boolean;
 }
 const Signup = () => {
+  const [formError, setFormError] = React.useState<string>("");
   const [name, setName] = React.useState("");
   const [email, setEmail] = React.useState("");
   const [password, setPassword] = React.useState("");
@@ -29,6 +31,7 @@ const Signup = () => {
     password: false,
   });
   const navigate = useNavigate();
+  const toast = useToast();
 
   const login = () => {
     navigate("/signin");
@@ -60,8 +63,32 @@ const Signup = () => {
       });
     }
     setLoading(true);
-    console.log("Creating Account");
-    setLoading(false);
+    try {
+      api
+        .post("/auth/signup", {
+          name,
+          email,
+          password,
+        })
+        .then((res) => {
+          if (res.data.success) {
+            toast({
+              title: "Account created.",
+              description: "We've created your account for you.",
+              status: "success",
+              duration: 9000,
+              isClosable: true,
+            });
+          } else {
+            setFormError(res.data.message);
+          }
+        });
+    } catch (err) {
+      console.log(err);
+    } finally {
+      setLoading(false);
+      navigate("/");
+    }
   };
 
   return (
@@ -122,13 +149,15 @@ const Signup = () => {
                 backgroundColor: "rgba(255,255,255,0.25)",
               }}
             />
-            <FormErrorMessage>
-              {error.name && (
-                <Text fontFamily="Clash Display">
-                  Please enter your Full Name.
-                </Text>
-              )}
-            </FormErrorMessage>
+            {error.name && (
+              <Text
+                marginBlockStart="8px"
+                textColor="red.500"
+                fontFamily="Clash Display"
+              >
+                Please enter your Full Name.
+              </Text>
+            )}
           </FormControl>
 
           <FormControl
@@ -167,13 +196,15 @@ const Signup = () => {
                 backgroundColor: "rgba(255,255,255,0.25)",
               }}
             />
-            <FormErrorMessage>
-              {error.email && (
-                <Text fontFamily="Clash Display">
-                  Please enter valid Email Address.
-                </Text>
-              )}
-            </FormErrorMessage>
+            {error.email && (
+              <Text
+                marginBlockStart="8px"
+                textColor="red.500"
+                fontFamily="Clash Display"
+              >
+                Please enter valid Email Address.
+              </Text>
+            )}
           </FormControl>
           <FormControl
             marginBlockStart="12px"
@@ -211,13 +242,15 @@ const Signup = () => {
                 backgroundColor: "rgba(255,255,255,0.25)",
               }}
             />
-            <FormErrorMessage>
-              {error.password && (
-                <Text fontFamily="Clash Display">
-                  Please enter a Valid Password.
-                </Text>
-              )}
-            </FormErrorMessage>
+            {error.password && (
+              <Text
+                marginBlockStart="8px"
+                textColor="red.500"
+                fontFamily="Clash Display"
+              >
+                Please enter a Valid Password.
+              </Text>
+            )}
           </FormControl>
           <Checkbox
             onClick={() => setIsChecked(!isChecked)}
@@ -228,6 +261,17 @@ const Signup = () => {
           >
             I agree to the Terms of Service
           </Checkbox>
+          <Text>
+            {formError.length > 0 && (
+              <Text
+                marginBlockStart="8px"
+                textColor="red.500"
+                fontFamily="Clash Display"
+              >
+                {formError}
+              </Text>
+            )}
+          </Text>
           <Button
             marginBlockStart="16px"
             width="100%"

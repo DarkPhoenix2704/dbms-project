@@ -11,12 +11,14 @@ import {
 } from "@chakra-ui/react";
 import React, { FormEvent } from "react";
 import { useNavigate } from "react-router-dom";
+import { api } from "../../api";
 import { BaseLayout } from "../../layout";
 interface Errors {
   email: boolean;
   password: boolean;
 }
 const Signin = () => {
+  const [formError, setFormError] = React.useState<string>("");
   const [email, setEmail] = React.useState("");
   const [password, setPassword] = React.useState("");
   const [isChecked, setIsChecked] = React.useState(false);
@@ -31,8 +33,9 @@ const Signin = () => {
     navigate("/signup");
   };
 
-  const login = (e: FormEvent) => {
+  const login = async (e: FormEvent) => {
     e.preventDefault();
+    setFormError("");
     if (
       !email.match(
         /^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
@@ -50,8 +53,25 @@ const Signin = () => {
       });
     }
     setLoading(true);
-    console.log("Logging In");
-    setLoading(false);
+    try {
+      api
+        .post("/auth/login", {
+          email,
+          password,
+        })
+        .then((res) => {
+          if (res.data.success) {
+            localStorage.setItem("token", JSON.stringify(res.data.data));
+          } else {
+            setFormError(res.data.message);
+          }
+        });
+    } catch (error) {
+      console.log(error);
+    } finally {
+      setLoading(false);
+      navigate("/");
+    }
   };
 
   return (
@@ -78,10 +98,7 @@ const Signin = () => {
         <form>
           <FormControl
             marginBlockStart="12px"
-            width={{
-              base: "325px",
-              md: "400px",
-            }}
+            width="100%"
             isRequired
             label="Email"
             id="Email"
@@ -112,20 +129,19 @@ const Signin = () => {
                 backgroundColor: "rgba(255,255,255,0.25)",
               }}
             />
-            <FormErrorMessage>
-              {error.email && (
-                <Text fontFamily="Clash Display">
-                  Please enter valid Email Address.
-                </Text>
-              )}
-            </FormErrorMessage>
+            {error.email && (
+              <Text
+                marginBlockStart="8px"
+                textColor="red.500"
+                fontFamily="Clash Display"
+              >
+                Please enter valid Email Address.
+              </Text>
+            )}
           </FormControl>
           <FormControl
             marginBlockStart="12px"
-            width={{
-              base: "325px",
-              md: "400px",
-            }}
+            width="100%"
             isRequired
             label="Password"
             id="Password"
@@ -156,13 +172,15 @@ const Signin = () => {
                 backgroundColor: "rgba(255,255,255,0.25)",
               }}
             />
-            <FormErrorMessage>
-              {error.password && (
-                <Text fontFamily="Clash Display">
-                  Please enter a Valid Password.
-                </Text>
-              )}
-            </FormErrorMessage>
+            {error.password && (
+              <Text
+                marginBlockStart="8px"
+                textColor="red.500"
+                fontFamily="Clash Display"
+              >
+                Please enter a Valid Password.
+              </Text>
+            )}
           </FormControl>
           <Checkbox
             onClick={() => setIsChecked(!isChecked)}
@@ -172,6 +190,17 @@ const Signin = () => {
           >
             Remember me
           </Checkbox>
+          <Text>
+            {formError.length > 0 && (
+              <Text
+                marginBlockStart="8px"
+                textColor="red.500"
+                fontFamily="Clash Display"
+              >
+                {formError}
+              </Text>
+            )}
+          </Text>
           <Button
             marginBlockStart="16px"
             width="100%"
