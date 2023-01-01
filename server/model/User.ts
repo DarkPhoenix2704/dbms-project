@@ -13,6 +13,12 @@ const User = new Schema({
     type: String,
     required: true,
   },
+  memories: [
+    {
+      type: Schema.Types.ObjectId,
+      ref: "Memory",
+    },
+  ],
 });
 
 const UserSchema = model("User", User);

@@ -3,6 +3,8 @@ import dotenv from "dotenv";
 import authRouter from "./routes/auth";
 import * as mongoose from "mongoose";
 import cors from "cors";
+import memoryRouter from "./routes/memory";
+import { authenticateToken } from "./middlewares";
 dotenv.config();
 
 mongoose.connect(process.env.MONGO_URI as string).then(() => {
@@ -14,7 +16,9 @@ const app: Express = express();
 const port = process.env.PORT;
 app.use(cors());
 app.use(json());
+
 app.use("/auth", authRouter);
+app.use("/memory", authenticateToken, memoryRouter);
 
 app.listen(port, () => {
   console.log(`⚡️[server]: Server is running at http://localhost:${port}`);

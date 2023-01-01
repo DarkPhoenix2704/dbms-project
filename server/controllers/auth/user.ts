@@ -1,30 +1,22 @@
 import { Request, Response } from "express";
-import { verify } from "jsonwebtoken";
+import UserSchema from "../../model/User";
 
 const user = async (req: Request, res: Response) => {
-  const token = req.headers["x-access-token"];
-  if (!token) {
-    return res.json({
-      success: false,
-      message: "No token provided",
-    });
-  }
+  const { email } = req.user;
   try {
-    const decoded = verify(token as string, process.env.JWT_SECRET as string);
-    if (!decoded) {
-      return res.json({
-        success: false,
-        message: "Invalid token",
-      });
-    }
+    const temp = await UserSchema.findOne({ email });
     return res.json({
       success: true,
       message: "Token is valid",
       data: {
-        token,
+        user: {
+          email: temp?.email,
+          name: temp?.name,
+        },
       },
     });
-  } catch {
+  } catch (err) {
+    console.log(err);
     return res.status(500).json({
       success: false,
       message: "Internal server error",
