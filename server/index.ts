@@ -2,7 +2,7 @@ import express, { Express, json, Request, Response } from "express";
 import dotenv from "dotenv";
 import authRouter from "./routes/auth";
 import * as mongoose from "mongoose";
-
+import cors from "cors";
 dotenv.config();
 
 mongoose.connect(process.env.MONGO_URI as string).then(() => {
@@ -12,6 +12,7 @@ mongoose.set("strictQuery", true);
 
 const app: Express = express();
 const port = process.env.PORT;
+app.use(cors());
 app.use(json());
 app.use("/auth", authRouter);
 
