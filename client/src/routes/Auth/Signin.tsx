@@ -229,6 +229,7 @@ const Signin = () => {
             Login
           </Button>
           <Button
+            disabled={loading}
             marginBlockStart="16px"
             width="100%"
             backgroundColor="white"
